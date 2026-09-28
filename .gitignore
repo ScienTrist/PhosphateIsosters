@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.idea/
+data/
+cache/
+results/
+*.db
+*.sqlite3
