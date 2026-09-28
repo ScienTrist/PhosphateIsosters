@@ -43,6 +43,52 @@ common but often pharmacokinetically problematic).
    PyMOL installed. Used to collect ground-truth judgments for calibrating
    the interaction-similarity score thresholds against human intuition.
 
+## Repo structure
+
+```
+src/              Core library: RCSB search, PDB download, MMseqs2/BLAST
+                   homology enrichment, TM-align wrappers, ligand/interaction
+                   detection, shared constants and utilities
+scripts/          Pipeline entry points and batch drivers (site discovery,
+                   TM-align batches, motif extraction, isostere analysis,
+                   PLIF-based scoring)
+pocket_types/     Pocket-geometry clustering and binding-motif extraction
+analysis/         Standalone dataset statistics (cluster sizes, ligand
+                   breakdowns, quality-filter funnel)
+ProLIF_v2/        ProLIF-based interaction fingerprinting pipeline
+ProLIF_v2/review_app/   PHIP — the human-in-the-loop rating web app
+```
+
+## Requirements
+
+- Python 3.10+
+- Core Python packages: `gemmi`, `numpy`, `rdkit`, `MDAnalysis`
+- [ProLIF](https://github.com/chemosim-lab/ProLIF) for interaction
+  fingerprinting
+- External CLI tools on `PATH`: [TM-align](https://zhanggroup.org/TM-align/)
+  and [MMseqs2](https://github.com/soedinglab/MMseqs2)
+- For the review app specifically, see
+  `ProLIF_v2/review_app/requirements.txt` (FastAPI, uvicorn)
+
+There is no single consolidated environment file for the research pipeline
+itself (it grew incrementally over the thesis) — the packages above cover
+what's imported across `src/` and `scripts/`.
+
+## Usage
+
+The pipeline is meant to be run stage by stage rather than as one script.
+For example, to discover phosphate-binding sites and download the
+corresponding structures:
+
+```bash
+python src/rcsb_search.py
+python src/pdb_downloader.py
+```
+
+See the module docstring at the top of each script under `scripts/` for
+its specific inputs/outputs — they're written to be run in the order
+described in **Pipeline overview** above.
+
 ## Stack
 
 Python, [gemmi](https://gemmi.readthedocs.io/) (structure I/O), TM-align,
@@ -57,3 +103,12 @@ excluded, both because they're multi-hundred-MB regenerable artifacts and
 because the underlying findings are part of an unpublished thesis. Running
 the pipeline end-to-end from `src/rcsb_search.py` onward regenerates all of
 these locally.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+## Author
+
+Tristan Caeyers
+[GitHub](https://github.com/ScienTrist) · Tristan@Caeyers.nl
